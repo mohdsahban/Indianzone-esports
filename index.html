@@ -16,298 +16,314 @@
 </head>
 <body class="max-w-md mx-auto min-h-screen pb-20 relative select-none">
 
-  <!-- ================= 1. HOME SCREEN ================= -->
-  <section id="scrHome" class="screen active">
-    <!-- Top Header -->
-    <div class="bg-[#1d8cf8] px-4 py-3 flex justify-between items-center text-white shadow-md">
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-yellow-300 font-black shadow">
-          <i class="fa-solid fa-fire"></i>
-        </div>
-        <div>
-          <h1 class="text-sm font-black tracking-wide leading-none">IndianZone</h1>
-          <p class="text-[9px] text-blue-100 font-semibold mt-0.5">Tournament Platform</p>
-        </div>
+  <!-- ================= AUTH SCREEN (LOGIN / SIGNUP) ================= -->
+  <section id="scrAuth" class="screen active p-6 min-h-screen flex flex-col justify-center">
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-400 mx-auto flex items-center justify-center text-3xl text-white shadow-lg mb-3">
+        <i class="fa-solid fa-fire"></i>
       </div>
-      <div class="flex items-center gap-3">
-        <i class="fa-regular fa-bell text-lg"></i>
-        <div onclick="navigate('scrWallet')" class="cursor-pointer bg-[#0b0e14]/80 px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-white/10">
-          <i class="fa-solid fa-coins coin-gold text-xs"></i>
-          <span class="text-xs font-black font-mono" id="topCoinCount">0.00</span>
-        </div>
-      </div>
+      <h2 class="text-2xl font-black italic tracking-wider text-white">INDIANZONE</h2>
+      <p class="text-xs text-gray-400 mt-1">Free Fire Esports Tournament Platform</p>
     </div>
 
-    <!-- Match Feed -->
-    <div class="p-4 space-y-4">
-      <div class="flex justify-between items-center text-xs font-bold text-gray-400">
-        <span class="uppercase tracking-wider">Available Tournaments</span>
-        <span class="text-blue-400 font-mono text-[11px] cursor-pointer" onclick="navigate('scrMyMatches')">My Matches →</span>
+    <!-- Sign In / Sign Up Forms -->
+    <div class="bg-[#141822] border border-gray-800 rounded-3xl p-5 shadow-2xl">
+      <div class="flex border-b border-gray-800 mb-5 text-center font-bold text-xs">
+        <button id="tabLogin" onclick="switchAuth('login')" class="w-1/2 pb-3 border-b-2 border-blue-500 text-blue-400">Login</button>
+        <button id="tabRegister" onclick="switchAuth('register')" class="w-1/2 pb-3 text-gray-500">Sign Up</button>
       </div>
 
-      <!-- Match Card #101 -->
-      <div class="bg-[#141822] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
-        <div class="flex justify-between items-start">
-          <div>
-            <span class="bg-blue-500/20 text-blue-400 text-[10px] font-extrabold px-2 py-0.5 rounded">FREE FIRE • BERMUDA</span>
-            <h3 class="text-sm font-bold text-white mt-1.5">Daily Squad Championship #101</h3>
-          </div>
-          <span class="text-[11px] font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">8:00 PM</span>
+      <!-- Login Form -->
+      <div id="formLogin" class="space-y-3">
+        <div>
+          <label class="text-[10px] text-gray-400 font-bold uppercase">Phone Number</label>
+          <input id="loginPhone" type="tel" placeholder="Enter 10-digit number" class="w-full bg-[#0b0e14] border border-gray-800 rounded-xl p-3 text-xs text-white outline-none focus:border-blue-500">
         </div>
-
-        <div class="grid grid-cols-3 gap-2 my-3.5 bg-[#0b0e14] p-2.5 rounded-xl text-center border border-gray-800">
-          <div><p class="text-[10px] text-gray-400">Entry</p><p class="text-xs font-black text-green-400 font-mono">30 Coins</p></div>
-          <div><p class="text-[10px] text-gray-400">Per Kill</p><p class="text-xs font-black text-blue-400 font-mono">15 Coins</p></div>
-          <div><p class="text-[10px] text-gray-400">Prize Pool</p><p class="text-xs font-black text-amber-400 font-mono">600 Coins</p></div>
+        <div>
+          <label class="text-[10px] text-gray-400 font-bold uppercase">Password</label>
+          <input id="loginPass" type="password" placeholder="Enter password" class="w-full bg-[#0b0e14] border border-gray-800 rounded-xl p-3 text-xs text-white outline-none focus:border-blue-500">
         </div>
+        <button onclick="handleLogin()" class="w-full bg-[#1d8cf8] hover:bg-blue-600 text-white font-extrabold py-3 rounded-xl text-xs uppercase tracking-wider transition mt-2">
+          Login to Play
+        </button>
+      </div>
 
-        <div id="roomAlertBox" class="hidden mb-3 bg-blue-950/40 border border-blue-500/40 p-2.5 rounded-xl text-xs font-mono">
-          <p class="text-[10px] text-blue-300 font-bold mb-1">Room ID & Pass (Match 15m pehle):</p>
-          <div class="flex justify-between bg-black/60 px-2.5 py-1.5 rounded">
-            <span>ID: <b id="userRoomIdDisplay" class="text-white">----</b></span>
-            <span>Pass: <b id="userRoomPassDisplay" class="text-white">----</b></span>
-          </div>
+      <!-- Register Form -->
+      <div id="formRegister" class="space-y-3 hidden">
+        <div>
+          <label class="text-[10px] text-gray-400 font-bold uppercase">Full Name</label>
+          <input id="regName" type="text" placeholder="e.g. Sahban" class="w-full bg-[#0b0e14] border border-gray-800 rounded-xl p-3 text-xs text-white outline-none focus:border-blue-500">
         </div>
-
-        <button id="joinMatchBtn" onclick="handleJoinMatch()" class="w-full bg-[#1d8cf8] hover:bg-blue-600 text-white font-extrabold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">
-          Join Match (30 Coins)
+        <div>
+          <label class="text-[10px] text-gray-400 font-bold uppercase">Phone Number</label>
+          <input id="regPhone" type="tel" placeholder="10-digit mobile number" class="w-full bg-[#0b0e14] border border-gray-800 rounded-xl p-3 text-xs text-white outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="text-[10px] text-gray-400 font-bold uppercase">Email (Optional)</label>
+          <input id="regEmail" type="email" placeholder="your@email.com" class="w-full bg-[#0b0e14] border border-gray-800 rounded-xl p-3 text-xs text-white outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="text-[10px] text-gray-400 font-bold uppercase">Create Password</label>
+          <input id="regPass" type="password" placeholder="At least 6 characters" class="w-full bg-[#0b0e14] border border-gray-800 rounded-xl p-3 text-xs text-white outline-none focus:border-blue-500">
+        </div>
+        <button onclick="handleRegister()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold py-3 rounded-xl text-xs uppercase tracking-wider transition mt-2">
+          Create Account
         </button>
       </div>
     </div>
   </section>
 
-  <!-- ================= 2. MY WALLET SCREEN ================= -->
-  <section id="scrWallet" class="screen">
-    <div class="px-4 py-3 flex items-center gap-3 border-b border-gray-800">
-      <button onclick="navigate('scrHome')" class="text-gray-400 text-base"><i class="fa-solid fa-arrow-left"></i></button>
-      <h2 class="text-base font-bold text-white">My Wallet</h2>
-    </div>
+  <!-- ================= APP WRAPPER (ONLY VISIBLE AFTER LOGIN) ================= -->
+  <div id="appContainer" class="hidden">
 
-    <div class="p-4 space-y-4">
-      <div class="bg-[#141822] rounded-2xl p-4 border border-gray-800 space-y-3.5">
-        <div class="flex justify-between items-center">
+    <!-- SCREEN 1: HOME -->
+    <section id="scrHome" class="screen active">
+      <div class="bg-[#1d8cf8] px-4 py-3 flex justify-between items-center text-white shadow-md">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-yellow-300 font-black shadow">
+            <i class="fa-solid fa-fire"></i>
+          </div>
           <div>
-            <p class="text-[11px] text-gray-400">Total Balance</p>
-            <div class="flex items-center gap-1.5 mt-0.5">
-              <i class="fa-solid fa-coins coin-gold text-lg"></i>
-              <span class="text-2xl font-black font-mono" id="wallTotalCoin">0.00</span>
+            <h1 class="text-sm font-black tracking-wide leading-none">IndianZone</h1>
+            <p class="text-[9px] text-blue-100 font-semibold mt-0.5">Tournament Platform</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div onclick="navigate('scrWallet')" class="cursor-pointer bg-[#0b0e14]/80 px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-white/10">
+            <i class="fa-solid fa-coins coin-gold text-xs"></i>
+            <span class="text-xs font-black font-mono" id="topCoinCount">0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 space-y-4">
+        <div class="flex justify-between items-center text-xs font-bold text-gray-400">
+          <span class="uppercase tracking-wider">Available Tournaments</span>
+          <span class="text-blue-400 font-mono text-[11px] cursor-pointer" onclick="navigate('scrMyMatches')">My Matches →</span>
+        </div>
+
+        <div class="bg-[#141822] border border-gray-800/80 rounded-2xl p-4 shadow-lg">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="bg-blue-500/20 text-blue-400 text-[10px] font-extrabold px-2 py-0.5 rounded">FREE FIRE • BERMUDA</span>
+              <h3 class="text-sm font-bold text-white mt-1.5">Daily Squad Championship #101</h3>
+            </div>
+            <span class="text-[11px] font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">8:00 PM</span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 my-3.5 bg-[#0b0e14] p-2.5 rounded-xl text-center border border-gray-800">
+            <div><p class="text-[10px] text-gray-400">Entry</p><p class="text-xs font-black text-green-400 font-mono">30 Coins</p></div>
+            <div><p class="text-[10px] text-gray-400">Per Kill</p><p class="text-xs font-black text-blue-400 font-mono">15 Coins</p></div>
+            <div><p class="text-[10px] text-gray-400">Prize Pool</p><p class="text-xs font-black text-amber-400 font-mono">600 Coins</p></div>
+          </div>
+
+          <div id="roomAlertBox" class="hidden mb-3 bg-blue-950/40 border border-blue-500/40 p-2.5 rounded-xl text-xs font-mono">
+            <p class="text-[10px] text-blue-300 font-bold mb-1">Room ID & Pass (Match 15m pehle):</p>
+            <div class="flex justify-between bg-black/60 px-2.5 py-1.5 rounded">
+              <span>ID: <b id="userRoomIdDisplay" class="text-white">----</b></span>
+              <span>Pass: <b id="userRoomPassDisplay" class="text-white">----</b></span>
             </div>
           </div>
-          <i class="fa-solid fa-circle-info text-blue-400 text-lg"></i>
-        </div>
 
-        <div class="border-t border-gray-800/80 pt-3 flex justify-between items-center">
-          <div>
-            <p class="text-[11px] text-gray-400">Play Coin</p>
-            <p class="text-sm font-bold font-mono" id="wallPlayCoin">0.00</p>
-          </div>
-          <button onclick="navigate('scrAddCoin')" class="bg-[#38d39f] hover:bg-emerald-500 text-black font-bold text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 shadow">
-            <i class="fa-solid fa-plus text-[10px]"></i> Add Coin
-          </button>
-        </div>
-
-        <div class="border-t border-gray-800/80 pt-3 flex justify-between items-center">
-          <div>
-            <p class="text-[11px] text-gray-400">Winnings</p>
-            <p class="text-sm font-bold font-mono" id="wallWinCoin">0.00</p>
-          </div>
-          <button onclick="navigate('scrWithdraw')" class="bg-[#1d8cf8] hover:bg-blue-600 text-white font-bold text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 shadow">
-            <i class="fa-solid fa-arrow-down text-[10px]"></i> Withdraw
+          <button id="joinMatchBtn" onclick="handleJoinMatch()" class="w-full bg-[#1d8cf8] hover:bg-blue-600 text-white font-extrabold py-2.5 rounded-xl text-xs uppercase tracking-wider transition">
+            Join Match (30 Coins)
           </button>
         </div>
       </div>
+    </section>
 
-      <div class="bg-[#141822] rounded-2xl p-2 border border-gray-800 divide-y divide-gray-800 text-xs">
-        <div class="p-3 flex justify-between items-center">
-          <span class="text-gray-300 font-semibold">Transaction History</span>
-          <span class="text-[10px] text-gray-500 font-bold tracking-wider">VIEW ALL</span>
-        </div>
-        <div class="p-3 flex justify-between items-center">
-          <span class="text-gray-300 font-semibold">Withdrawal History</span>
-          <span class="text-[10px] text-gray-500 font-bold tracking-wider">VIEW ALL</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= 3. ADD COIN SCREEN ================= -->
-  <section id="scrAddCoin" class="screen">
-    <div class="px-4 py-3 flex items-center gap-3 border-b border-gray-800">
-      <button onclick="navigate('scrWallet')" class="text-gray-400 text-base"><i class="fa-solid fa-arrow-left"></i></button>
-      <h2 class="text-base font-bold text-white">Add Coin</h2>
-    </div>
-
-    <div class="p-4 space-y-4">
-      <div class="text-center mt-2">
-        <h3 class="text-sm font-bold text-emerald-400">Payment Option</h3>
-        <p class="text-[11px] text-gray-500">Manual amount: 5 - 5000 coins</p>
+    <!-- SCREEN 2: WALLET -->
+    <section id="scrWallet" class="screen">
+      <div class="px-4 py-3 flex items-center gap-3 border-b border-gray-800">
+        <button onclick="navigate('scrHome')" class="text-gray-400 text-base"><i class="fa-solid fa-arrow-left"></i></button>
+        <h2 class="text-base font-bold text-white">My Wallet</h2>
       </div>
 
-      <div class="grid grid-cols-3 gap-2.5">
-        <div onclick="selectPayMethod('UPI')" id="optUPI" class="pay-method bg-[#141822] border-2 border-emerald-500 rounded-2xl p-3 flex flex-col items-center justify-center cursor-pointer shadow-md">
-          <i class="fa-solid fa-bolt text-emerald-400 text-xl mb-1"></i>
-          <span class="text-xs font-bold">UPI</span>
-        </div>
-        <div onclick="selectPayMethod('Paytm')" id="optPaytm" class="pay-method bg-[#141822] border border-gray-800 rounded-2xl p-3 flex flex-col items-center justify-center cursor-pointer">
-          <i class="fa-solid fa-wallet text-sky-400 text-xl mb-1"></i>
-          <span class="text-xs font-bold">Paytm</span>
-        </div>
-        <div onclick="selectPayMethod('QR')" id="optQR" class="pay-method bg-[#141822] border border-gray-800 rounded-2xl p-3 flex flex-col items-center justify-center cursor-pointer">
-          <i class="fa-solid fa-qrcode text-purple-400 text-xl mb-1"></i>
-          <span class="text-xs font-bold">QR</span>
+      <div class="p-4 space-y-4">
+        <div class="bg-[#141822] rounded-2xl p-4 border border-gray-800 space-y-3.5">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-[11px] text-gray-400">Total Balance</p>
+              <div class="flex items-center gap-1.5 mt-0.5">
+                <i class="fa-solid fa-coins coin-gold text-lg"></i>
+                <span class="text-2xl font-black font-mono" id="wallTotalCoin">0.00</span>
+              </div>
+            </div>
+            <i class="fa-solid fa-circle-info text-blue-400 text-lg"></i>
+          </div>
+
+          <div class="border-t border-gray-800/80 pt-3 flex justify-between items-center">
+            <div>
+              <p class="text-[11px] text-gray-400">Play Coin</p>
+              <p class="text-sm font-bold font-mono" id="wallPlayCoin">0.00</p>
+            </div>
+            <button onclick="navigate('scrAddCoin')" class="bg-[#38d39f] hover:bg-emerald-500 text-black font-bold text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 shadow">
+              <i class="fa-solid fa-plus text-[10px]"></i> Add Coin
+            </button>
+          </div>
+
+          <div class="border-t border-gray-800/80 pt-3 flex justify-between items-center">
+            <div>
+              <p class="text-[11px] text-gray-400">Winnings</p>
+              <p class="text-sm font-bold font-mono" id="wallWinCoin">0.00</p>
+            </div>
+            <button onclick="navigate('scrWithdraw')" class="bg-[#1d8cf8] hover:bg-blue-600 text-white font-bold text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 shadow">
+              <i class="fa-solid fa-arrow-down text-[10px]"></i> Withdraw
+            </button>
+          </div>
         </div>
       </div>
+    </section>
 
-      <div class="bg-[#141822] border border-gray-800 rounded-2xl p-3 flex items-center gap-2">
-        <i class="fa-solid fa-coins coin-gold text-sm"></i>
-        <input id="coinAmountInput" type="number" placeholder="Enter coin amount (5 - 5000)" class="w-full bg-transparent text-xs text-white outline-none">
+    <!-- SCREEN 3: ADD COIN -->
+    <section id="scrAddCoin" class="screen">
+      <div class="px-4 py-3 flex items-center gap-3 border-b border-gray-800">
+        <button onclick="navigate('scrWallet')" class="text-gray-400 text-base"><i class="fa-solid fa-arrow-left"></i></button>
+        <h2 class="text-base font-bold text-white">Add Coin</h2>
       </div>
 
-      <div class="grid grid-cols-3 gap-3">
-        <button onclick="setCoinInput(30)" class="bg-[#141822] border border-gray-800 rounded-xl py-2 flex items-center justify-center gap-1.5 text-xs font-bold">
-          <i class="fa-solid fa-coins coin-gold text-[10px]"></i> 30
+      <div class="p-4 space-y-4">
+        <div class="text-center mt-2">
+          <h3 class="text-sm font-bold text-emerald-400">Payment Option</h3>
+          <p class="text-[11px] text-gray-500">Manual amount: 5 - 5000 coins</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5">
+          <div onclick="selectPayMethod('UPI')" id="optUPI" class="pay-method bg-[#141822] border-2 border-emerald-500 rounded-2xl p-3 flex flex-col items-center justify-center cursor-pointer shadow-md">
+            <i class="fa-solid fa-bolt text-emerald-400 text-xl mb-1"></i>
+            <span class="text-xs font-bold">UPI</span>
+          </div>
+          <div onclick="selectPayMethod('Paytm')" id="optPaytm" class="pay-method bg-[#141822] border border-gray-800 rounded-2xl p-3 flex flex-col items-center justify-center cursor-pointer">
+            <i class="fa-solid fa-wallet text-sky-400 text-xl mb-1"></i>
+            <span class="text-xs font-bold">Paytm</span>
+          </div>
+          <div onclick="selectPayMethod('QR')" id="optQR" class="pay-method bg-[#141822] border border-gray-800 rounded-2xl p-3 flex flex-col items-center justify-center cursor-pointer">
+            <i class="fa-solid fa-qrcode text-purple-400 text-xl mb-1"></i>
+            <span class="text-xs font-bold">QR</span>
+          </div>
+        </div>
+
+        <div class="bg-[#141822] border border-gray-800 rounded-2xl p-3 flex items-center gap-2">
+          <i class="fa-solid fa-coins coin-gold text-sm"></i>
+          <input id="coinAmountInput" type="number" placeholder="Enter coin amount (5 - 5000)" class="w-full bg-transparent text-xs text-white outline-none">
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+          <button onclick="setCoinInput(30)" class="bg-[#141822] border border-gray-800 rounded-xl py-2 flex items-center justify-center gap-1.5 text-xs font-bold">30</button>
+          <button onclick="setCoinInput(50)" class="bg-[#141822] border border-gray-800 rounded-xl py-2 flex items-center justify-center gap-1.5 text-xs font-bold">50</button>
+          <button onclick="setCoinInput(100)" class="bg-[#141822] border border-gray-800 rounded-xl py-2 flex items-center justify-center gap-1.5 text-xs font-bold">100</button>
+        </div>
+
+        <div class="bg-[#141822] border border-emerald-500/30 rounded-2xl p-4 space-y-3">
+          <p class="text-xs font-bold text-gray-300">Scan QR ya UPI se pay karke UTR enter karein:</p>
+          <div class="flex justify-center p-2 bg-white rounded-xl">
+            <img src="qr.png" alt="Payment QR" class="w-40 h-40 object-contain">
+          </div>
+          <p class="text-[11px] text-center font-mono text-amber-400 font-bold">9519668705@nyes</p>
+          <input id="depositUtrNumber" type="text" placeholder="12-digit UTR / UPI Ref ID" class="w-full bg-[#0b0e14] border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-emerald-500">
+        </div>
+
+        <button onclick="submitAddCoinProof()" class="w-full bg-[#1d8cf8] hover:bg-blue-600 text-white font-extrabold py-3 rounded-2xl text-xs uppercase tracking-wider shadow-lg">
+          Submit Payment
         </button>
-        <button onclick="setCoinInput(50)" class="bg-[#141822] border border-gray-800 rounded-xl py-2 flex items-center justify-center gap-1.5 text-xs font-bold">
-          <i class="fa-solid fa-coins coin-gold text-[10px]"></i> 50
-        </button>
-        <button onclick="setCoinInput(100)" class="bg-[#141822] border border-gray-800 rounded-xl py-2 flex items-center justify-center gap-1.5 text-xs font-bold">
-          <i class="fa-solid fa-coins coin-gold text-[10px]"></i> 100
-        </button>
+      </div>
+    </section>
+
+    <!-- SCREEN 4: WITHDRAW -->
+    <section id="scrWithdraw" class="screen">
+      <div class="px-4 py-3 flex items-center gap-3 border-b border-gray-800">
+        <button onclick="navigate('scrWallet')" class="text-gray-400 text-base"><i class="fa-solid fa-arrow-left"></i></button>
+        <h2 class="text-base font-bold text-white">Withdraw</h2>
       </div>
 
-      <div class="bg-[#141822] border border-emerald-500/30 rounded-2xl p-4 space-y-3">
-        <p class="text-xs font-bold text-gray-300">Scan QR ya UPI se pay karke UTR enter karein:</p>
-        <div class="flex justify-center p-2 bg-white rounded-xl">
-          <img src="qr.png" alt="Payment QR" class="w-40 h-40 object-contain">
+      <div class="p-4 space-y-4">
+        <div class="bg-[#141822] rounded-2xl p-4 border border-gray-800 space-y-3">
+          <p class="text-xs font-bold text-gray-300">UPI Payment Method</p>
+          <input id="withdrawUpiId" type="text" placeholder="Enter your UPI ID (e.g. name@upi)" class="w-full bg-[#0b0e14] border border-gray-800 rounded-xl p-2.5 text-xs text-white outline-none">
+          <input id="withdrawAmt" type="number" placeholder="Enter Coin Amount" class="w-full bg-[#0b0e14] border border-gray-800 rounded-xl p-2.5 text-xs text-white outline-none mt-2">
+          <button onclick="submitWithdrawal()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-3 rounded-2xl text-xs uppercase tracking-wider mt-2">
+            Withdraw Now
+          </button>
         </div>
-        <p class="text-[11px] text-center font-mono text-amber-400 font-bold">9519668705@nyes</p>
-        <input id="depositUtrNumber" type="text" placeholder="12-digit UTR / UPI Ref ID" class="w-full bg-[#0b0e14] border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-emerald-500">
+      </div>
+    </section>
+
+    <!-- SCREEN 5: MY MATCHES -->
+    <section id="scrMyMatches" class="screen">
+      <div class="px-4 py-3 flex items-center gap-3 border-b border-gray-800">
+        <button onclick="navigate('scrHome')" class="text-gray-400 text-base"><i class="fa-solid fa-arrow-left"></i></button>
+        <h2 class="text-base font-bold text-white">My Match</h2>
       </div>
 
-      <button onclick="submitAddCoinProof()" class="w-full bg-[#1d8cf8] hover:bg-blue-600 text-white font-extrabold py-3 rounded-2xl text-xs uppercase tracking-wider shadow-lg">
-        Submit Payment
+      <div class="p-4">
+        <div id="joinedMatchesList" class="space-y-3">
+          <div class="bg-[#141822] rounded-2xl p-8 border border-gray-800 text-center">
+            <p class="text-xs font-bold text-gray-300">No upcoming matches found</p>
+            <p class="text-[11px] text-gray-600 mt-1">This table will update when you join a match.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 6: DYNAMIC PROFILE -->
+    <section id="scrProfile" class="screen">
+      <div class="bg-[#1d8cf8] px-4 py-3 flex justify-between items-center text-white">
+        <h2 class="text-sm font-black tracking-wide">IndianZone</h2>
+        <div class="flex items-center gap-1.5 bg-[#0b0e14]/80 px-2.5 py-1 rounded-full text-xs font-mono font-bold">
+          <i class="fa-solid fa-coins coin-gold text-xs"></i> <span id="profTopCoin">0.00</span>
+        </div>
+      </div>
+
+      <div class="p-4 space-y-4">
+        <div class="bg-[#141822] rounded-2xl p-4 border border-gray-800 flex items-center gap-3.5">
+          <div id="userAvatar" class="w-14 h-14 rounded-full bg-blue-600 flex items-center justify-center font-bold text-xl text-white">
+            U
+          </div>
+          <div>
+            <h3 id="profileName" class="text-sm font-black text-white">Player</h3>
+            <p id="profilePhone" class="text-[11px] text-gray-400">+91 XXXXXXXXXX</p>
+            <p id="profileEmail" class="text-[10px] text-blue-400 font-mono">user@indianzone</p>
+          </div>
+        </div>
+
+        <div class="bg-[#141822] rounded-2xl border border-gray-800 divide-y divide-gray-800 text-xs font-semibold">
+          <div onclick="navigate('scrWallet')" class="p-3.5 flex justify-between items-center cursor-pointer">
+            <span class="flex items-center gap-2.5"><i class="fa-solid fa-wallet text-blue-400"></i> My Wallet</span>
+            <i class="fa-solid fa-chevron-right text-gray-600 text-[10px]"></i>
+          </div>
+          <div onclick="navigate('scrMyMatches')" class="p-3.5 flex justify-between items-center cursor-pointer">
+            <span class="flex items-center gap-2.5"><i class="fa-solid fa-gamepad text-purple-400"></i> My Matches</span>
+            <i class="fa-solid fa-chevron-right text-gray-600 text-[10px]"></i>
+          </div>
+          <div onclick="handleLogout()" class="p-3.5 flex justify-between items-center cursor-pointer text-red-400 hover:text-red-300">
+            <span class="flex items-center gap-2.5"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</span>
+            <i class="fa-solid fa-chevron-right text-gray-600 text-[10px]"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#141822]/95 border-t border-gray-800/80 backdrop-blur flex justify-around py-2.5 text-xs text-gray-400 z-50">
+      <button onclick="navigate('scrHome')" id="navHome" class="nav-btn nav-active flex flex-col items-center">
+        <i class="fa-solid fa-house text-base"></i>
+        <span class="text-[9px] font-bold mt-0.5">Home</span>
       </button>
-    </div>
-  </section>
+      <button onclick="navigate('scrMyMatches')" id="navMatches" class="nav-btn flex flex-col items-center">
+        <i class="fa-solid fa-gamepad text-base"></i>
+        <span class="text-[9px] font-bold mt-0.5">Matches</span>
+      </button>
+      <button onclick="navigate('scrWallet')" id="navWallet" class="nav-btn flex flex-col items-center">
+        <i class="fa-solid fa-wallet text-base"></i>
+        <span class="text-[9px] font-bold mt-0.5">Wallet</span>
+      </button>
+      <button onclick="navigate('scrProfile')" id="navProfile" class="nav-btn flex flex-col items-center">
+        <i class="fa-solid fa-user text-base"></i>
+        <span class="text-[9px] font-bold mt-0.5">Profile</span>
+      </button>
+    </nav>
 
-  <!-- ================= 4. WITHDRAW SCREEN ================= -->
-  <section id="scrWithdraw" class="screen">
-    <div class="px-4 py-3 flex items-center gap-3 border-b border-gray-800">
-      <button onclick="navigate('scrWallet')" class="text-gray-400 text-base"><i class="fa-solid fa-arrow-left"></i></button>
-      <h2 class="text-base font-bold text-white">Withdraw</h2>
-    </div>
-
-    <div class="grid grid-cols-3 bg-[#141822] text-xs font-bold border-b border-gray-800 text-center">
-      <div class="py-3 border-b-2 border-blue-500 text-blue-400 cursor-pointer">UPI</div>
-      <div class="py-3 text-gray-500 cursor-pointer">BANK</div>
-      <div class="py-3 text-gray-500 cursor-pointer">REDEEM</div>
-    </div>
-
-    <div class="p-4 space-y-4">
-      <div class="bg-[#1d8cf8] rounded-2xl p-4 text-white shadow-lg">
-        <p class="text-xs font-bold opacity-80">Withdraw Money</p>
-        <h3 class="text-base font-black mt-0.5">Saban Khan</h3>
-        <p class="text-[11px] opacity-75 mt-1">UPI Withdrawal • Min: 50.0, Max: 2000.0</p>
-      </div>
-
-      <div class="bg-[#141822] rounded-2xl p-4 border border-gray-800 space-y-3">
-        <p class="text-xs font-bold text-gray-300">UPI Payment Method</p>
-        <input id="withdrawUpiId" type="text" placeholder="Enter your UPI ID (e.g. name@upi)" class="w-full bg-[#0b0e14] border border-gray-800 rounded-xl p-2.5 text-xs text-white outline-none">
-        
-        <p class="text-xs font-bold text-gray-300 pt-1">Select Amount</p>
-        <div class="grid grid-cols-3 gap-2 text-xs font-bold">
-          <button onclick="setWithdrawVal(50)" class="bg-[#0b0e14] border border-gray-800 py-2 rounded-xl text-center">₹50</button>
-          <button onclick="setWithdrawVal(100)" class="bg-[#0b0e14] border border-gray-800 py-2 rounded-xl text-center">₹100</button>
-          <button onclick="setWithdrawVal(200)" class="bg-[#0b0e14] border border-gray-800 py-2 rounded-xl text-center">₹200</button>
-        </div>
-
-        <button onclick="submitWithdrawal()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-3 rounded-2xl text-xs uppercase tracking-wider mt-2">
-          Withdraw Now
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= 5. MY MATCHES SCREEN ================= -->
-  <section id="scrMyMatches" class="screen">
-    <div class="px-4 py-3 flex items-center gap-3 border-b border-gray-800">
-      <button onclick="navigate('scrHome')" class="text-gray-400 text-base"><i class="fa-solid fa-arrow-left"></i></button>
-      <h2 class="text-base font-bold text-white">My Match</h2>
-    </div>
-
-    <div class="grid grid-cols-3 bg-[#141822] text-xs font-bold border-b border-gray-800 text-center">
-      <div class="py-3 border-b-2 border-blue-500 text-blue-400">Upcoming</div>
-      <div class="py-3 text-gray-500">Completed</div>
-      <div class="py-3 text-gray-500">Cancelled</div>
-    </div>
-
-    <div class="p-4">
-      <div id="joinedMatchesList" class="space-y-3">
-        <div class="bg-[#141822] rounded-2xl p-8 border border-gray-800 text-center">
-          <p class="text-xs font-bold text-gray-300">No upcoming matches found</p>
-          <p class="text-[11px] text-gray-600 mt-1">This table will update when a match appears in this status.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= 6. PROFILE SCREEN ================= -->
-  <section id="scrProfile" class="screen">
-    <div class="bg-[#1d8cf8] px-4 py-3 flex justify-between items-center text-white">
-      <h2 class="text-sm font-black tracking-wide">IndianZone</h2>
-      <div class="flex items-center gap-1.5 bg-[#0b0e14]/80 px-2.5 py-1 rounded-full text-xs font-mono font-bold">
-        <i class="fa-solid fa-coins coin-gold text-xs"></i> <span id="profTopCoin">0.00</span>
-      </div>
-    </div>
-
-    <div class="p-4 space-y-4">
-      <div class="bg-[#141822] rounded-2xl p-4 border border-gray-800 flex items-center gap-3.5">
-        <div class="w-14 h-14 rounded-full bg-purple-600 flex items-center justify-center font-bold text-xl text-white">
-          S
-        </div>
-        <div>
-          <h3 class="text-sm font-black text-white">SABAN KHAN</h3>
-          <p class="text-[11px] text-gray-400">sabankhan7039@gmail.com</p>
-          <p class="text-[10px] text-blue-400 font-mono">@sabankhan771</p>
-        </div>
-      </div>
-
-      <div class="bg-[#141822] rounded-2xl border border-gray-800 divide-y divide-gray-800 text-xs font-semibold">
-        <div onclick="navigate('scrWallet')" class="p-3.5 flex justify-between items-center cursor-pointer">
-          <span class="flex items-center gap-2.5"><i class="fa-solid fa-wallet text-blue-400"></i> My Wallet</span>
-          <i class="fa-solid fa-chevron-right text-gray-600 text-[10px]"></i>
-        </div>
-        <div onclick="navigate('scrMyMatches')" class="p-3.5 flex justify-between items-center cursor-pointer">
-          <span class="flex items-center gap-2.5"><i class="fa-solid fa-gamepad text-purple-400"></i> My Matches</span>
-          <i class="fa-solid fa-chevron-right text-gray-600 text-[10px]"></i>
-        </div>
-        <div onclick="alert('Notification settings enabled!')" class="p-3.5 flex justify-between items-center cursor-pointer">
-          <span class="flex items-center gap-2.5"><i class="fa-regular fa-bell text-amber-400"></i> Notification Settings</span>
-          <i class="fa-solid fa-chevron-right text-gray-600 text-[10px]"></i>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= BOTTOM NAVIGATION ================= -->
-  <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#141822]/95 border-t border-gray-800/80 backdrop-blur flex justify-around py-2.5 text-xs text-gray-400 z-50">
-    <button onclick="navigate('scrHome')" id="navHome" class="nav-btn nav-active flex flex-col items-center">
-      <i class="fa-solid fa-house text-base"></i>
-      <span class="text-[9px] font-bold mt-0.5">Home</span>
-    </button>
-    <button onclick="navigate('scrMyMatches')" id="navMatches" class="nav-btn flex flex-col items-center">
-      <i class="fa-solid fa-gamepad text-base"></i>
-      <span class="text-[9px] font-bold mt-0.5">Matches</span>
-    </button>
-    <button onclick="navigate('scrWallet')" id="navWallet" class="nav-btn flex flex-col items-center">
-      <i class="fa-solid fa-wallet text-base"></i>
-      <span class="text-[9px] font-bold mt-0.5">Wallet</span>
-    </button>
-    <button onclick="navigate('scrProfile')" id="navProfile" class="nav-btn flex flex-col items-center">
-      <i class="fa-solid fa-user text-base"></i>
-      <span class="text-[9px] font-bold mt-0.5">Profile</span>
-    </button>
-  </nav>
+  </div>
 
   <script src="app.js"></script>
 </body>
