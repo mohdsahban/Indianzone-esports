@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IndianZone - Admin Control</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>body { background-color: #070a10; color: #fff; font-family: system-ui, sans-serif; }</style>
+</head>
+<body class="max-w-md mx-auto min-h-screen p-4 pb-12 select-none">
+
+  <!-- PIN LOCK SCREEN -->
+  <div id="pinScreen" class="flex flex-col items-center justify-center min-h-[85vh]">
+    <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-2xl mb-3 shadow-lg shadow-amber-500/10">
+      <i class="fa-solid fa-user-shield"></i>
+    </div>
+    <h2 class="text-base font-black uppercase text-white tracking-wider">Owner Portal</h2>
+    <p class="text-xs text-gray-400 mt-1 mb-5">Sirf Mohd Sahban ke liye</p>
+    <input id="pinCode" type="password" placeholder="Enter PIN (7860)" class="bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-center text-white tracking-widest text-sm outline-none focus:border-amber-400 w-44 mb-3">
+    <button onclick="loginAdmin()" class="bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider">
+      Unlock System
+    </button>
+  </div>
+
+  <!-- ADMIN CONTROL PANEL -->
+  <div id="adminPanel" class="hidden space-y-4">
+    <div class="bg-gray-900/90 border border-amber-500/30 p-4 rounded-2xl flex justify-between items-center">
+      <div>
+        <h1 class="text-sm font-black text-amber-400 uppercase tracking-wide">Sahban's Master Panel</h1>
+        <p class="text-[10px] text-gray-400">IndianZone Tournament Manager</p>
+      </div>
+      <button onclick="location.reload()" class="text-gray-400 hover:text-white text-xs"><i class="fa-solid fa-power-off"></i></button>
+    </div>
+
+    <!-- PUSH ROOM ID & PASS -->
+    <div class="bg-gray-900/80 border border-gray-800 p-4 rounded-2xl space-y-2.5">
+      <h3 class="text-xs font-black text-blue-400 uppercase tracking-wider flex items-center gap-1.5">
+        <i class="fa-solid fa-key"></i> Push Custom Room ID & Pass
+      </h3>
+      <input id="pushRoomId" type="text" placeholder="Free Fire Room ID" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none">
+      <input id="pushRoomPass" type="text" placeholder="Custom Room Password" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-2.5 text-xs text-white outline-none">
+      <button onclick="publishRoomDetails()" class="w-full bg-blue-500 hover:bg-blue-400 text-white font-black py-2.5 rounded-xl text-xs uppercase tracking-wider">
+        Push to All Players
+      </button>
+    </div>
+
+    <!-- PENDING DEPOSIT VERIFICATIONS -->
+    <div class="bg-gray-900/80 border border-gray-800 p-4 rounded-2xl">
+      <h3 class="text-xs font-black text-green-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+        <i class="fa-solid fa-money-check-dollar"></i> Deposit Approvals (UTR Verify)
+      </h3>
+      <div id="depositRequests" class="space-y-2 text-xs">
+        <p class="text-gray-500 text-center py-2 text-[11px]">No pending requests</p>
+      </div>
+    </div>
+
+    <!-- REGISTERED PLAYERS LIST -->
+    <div class="bg-gray-900/80 border border-gray-800 p-4 rounded-2xl">
+      <h3 class="text-xs font-black text-amber-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+        <i class="fa-solid fa-users"></i> Registered Players (Slot List)
+      </h3>
+      <div id="playersJoinedList" class="space-y-1.5 text-xs">
+        <p class="text-gray-500 text-center py-2 text-[11px]">No players joined yet</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function loginAdmin() {
+      const pin = document.getElementById('pinCode').value;
+      if (pin === "7860") {
+        document.getElementById('pinScreen').classList.add('hidden');
+        document.getElementById('adminPanel').classList.remove('hidden');
+        renderAdmin();
+      } else {
+        alert("غلط پن کوڈ درج کیا گیا ہے!");
+      }
+    }
+
+    function renderAdmin() {
+      const depBox = document.getElementById('depositRequests');
+      const plyBox = document.getElementById('playersJoinedList');
+      const deps = JSON.parse(localStorage.getItem('iz_pending_coins') || '[]');
+      const players = JSON.parse(localStorage.getItem('iz_match_players') || '[]');
+
+      if (depBox) {
+        depBox.innerHTML = deps.length === 0 ? '<p class="text-gray-500 text-center py-2 text-[11px]">No pending requests</p>' : '';
+        deps.forEach((d, idx) => {
+          depBox.innerHTML += `
+            <div class="bg-gray-950 p-2.5 rounded-xl border border-gray-800 flex justify-between items-center">
+              <div>
+                <p class="font-bold text-green-400">${d.amount} Coins</p>
+                <p class="text-[10px] text-gray-400">UTR: ${d.utr}</p>
+              </div>
+              <button onclick="approveDep(${idx}, ${d.amount})" class="bg-green-500 text-black text-[10px] font-black px-3 py-1.5 rounded-lg">Approve</button>
+            </div>
+          `;
+        });
+      }
+
+      if (plyBox) {
+        plyBox.innerHTML = players.length === 0 ? '<p class="text-gray-500 text-center py-2 text-[11px]">No players joined yet</p>' : '';
+        players.forEach(p => {
+          plyBox.innerHTML += `
+            <div class="bg-gray-950 p-2 rounded-lg border border-gray-800 flex justify-between text-[11px]">
+              <span class="text-blue-400 font-bold">${p.ign}</span>
+              <span class="text-gray-400 font-mono">UID: ${p.uid}</span>
+            </div>
+          `;
+        });
+      }
+    }
+
+    function approveDep(idx, amt) {
+      let coins = parseFloat(localStorage.getItem('iz_coins') || '0.00');
+      coins += parseFloat(amt);
+      localStorage.setItem('iz_coins', coins);
+
+      let deps = JSON.parse(localStorage.getItem('iz_pending_coins') || '[]');
+      deps.splice(idx, 1);
+      localStorage.setItem('iz_pending_coins', JSON.stringify(deps));
+
+      alert("Coins شامل کر دیے گئے ہیں!");
+      renderAdmin();
+    }
+
+    function publishRoomDetails() {
+      const id = document.getElementById('pushRoomId').value;
+      const pass = document.getElementById('pushRoomPass').value;
+      if (!id || !pass) return alert("ID اور پاس ورڈ دونوں درج کریں!");
+
+      localStorage.setItem('iz_room_id', id);
+      localStorage.setItem('iz_room_pass', pass);
+      alert("Room ID اور پاس ورڈ کھلاڑیوں کو بھیج دیا گیا ہے!");
+    }
+  </script>
+</body>
+</html>
